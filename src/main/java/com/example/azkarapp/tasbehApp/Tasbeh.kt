@@ -40,6 +40,7 @@ private fun PreviewApp() {
 
 
 
+
 @Composable
 fun AzkarApp() {
     var counter by remember { mutableIntStateOf(0) }
