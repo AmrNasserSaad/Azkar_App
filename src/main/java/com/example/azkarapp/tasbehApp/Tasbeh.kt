@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,24 +33,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.azkarapp.R
 
-@Preview
 @Composable
-private fun PreviewApp() {
-    AzkarApp()
-}
+fun AzkarApp(viewModel: AzkarViewModel) {
 
-
-
-@Composable
-fun AzkarApp() {
-    var counter by remember { mutableIntStateOf(0) }
-    var textFieldValue by remember { mutableStateOf(TextFieldValue("")) }
+    val counter by viewModel.counter.collectAsState()
+    val textFieldValue by viewModel.textFieldValue.collectAsState()
 
 
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { counter++ },
+            .clickable { viewModel.incrementCounter() },
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
@@ -71,8 +65,7 @@ fun AzkarApp() {
             OutlinedTextField(
                 value = textFieldValue,
                 onValueChange = {
-                    textFieldValue = it
-                    counter = 0 // Reset the counter when text changes
+                    viewModel.updateTextFieldValue(it) //Reset the counter when text changes
                 },
                 label = {
                     Text(
@@ -94,7 +87,7 @@ fun AzkarApp() {
                 )
             )
             Text(
-                text = (textFieldValue.text),
+                text = (textFieldValue),
                 fontSize = 38.sp,
                 fontFamily = FontFamily(Font(R.font.cairo_regular)),
                 color = Color.White,
@@ -113,4 +106,11 @@ fun AzkarApp() {
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewApp() {
+    val previewViewModel = AzkarViewModel()
+    AzkarApp(previewViewModel)
 }
